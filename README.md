@@ -1,0 +1,1 @@
+`go build -o bin/controlled-substitution-cipher main.go utils.go`
