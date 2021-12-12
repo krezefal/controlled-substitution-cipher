@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+func to4Bytes(r, g, b, a uint32) []byte {
+	return []byte{byte(r / 257), byte(g / 257), byte(b / 257), byte(a / 257)}
+}
+
 func getBytes(file io.Reader) (image.Image, []byte) {
 
 	img, err := bmp.Decode(file)
@@ -23,8 +27,7 @@ func getBytes(file io.Reader) (image.Image, []byte) {
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			byteRow = append(byteRow, byte(r), byte(g), byte(b))
+			byteRow = append(byteRow, to4Bytes(img.At(x, y).RGBA())...)
 		}
 	}
 
@@ -58,15 +61,19 @@ func writeImage(width, height int, byteRow []byte) *image.RGBA {
 	lowRight := image.Point{X: width, Y: height}
 	newImg := image.NewRGBA(image.Rectangle{Min: upLeft, Max: lowRight})
 
-	for i := 0; i < len(byteRow); i += 3 {
-		pixel := color.RGBA{R: byteRow[i], G: byteRow[i + 1], B: byteRow[i + 2]}
-		newImg.Set(i % height, i / height, pixel)
+	var kk int
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			cyan := color.RGBA{R: byteRow[kk], G: byteRow[kk+1], B: byteRow[kk+2], A: byteRow[kk+3]}
+			newImg.Set(x, y, cyan)
+			kk+=4
+		}
 	}
 
 	return newImg
 }
 
-func saveFile(img image.Image, byteRow []byte, path string) error {
+func saveFile(img image.Image, byteRow []byte, path string) {
 
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
@@ -77,17 +84,17 @@ func saveFile(img image.Image, byteRow []byte, path string) error {
 	if err != nil {
 		log.Printf(err.Error())
 	}
-	err = file.Close()
-	if err != nil {
-		log.Printf(err.Error())
-	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Printf(err.Error())
+		}
+	}(file)
 
 	err = bmp.Encode(file, newImg)
 	if err != nil {
 		log.Printf(err.Error())
 	}
-
-	return nil
 }
 
 func remove(s []uint8, i int) []uint8 {
