@@ -2,6 +2,7 @@ close all
 clear, clc
 
 FID = fopen('examples/ford.bmp', 'r');
+
 %BITMAPFILEHEADER
 FH = struct('bfTYPE','','bfSIZE','','bfR1','','bfR2','','bfOFFBITS','');
 FH.bfTYPE = fread(FID, 2, 'uchar');
@@ -10,6 +11,7 @@ FH.bfR1 = fread(FID, 2, 'uint8');
 FH.bfR2 = fread(FID, 2, 'uint8');
 FH.bfOFFBITS = fread(FID, 1, 'ulong');
 %BITMAPINFOHEADER
+
 IH = struct('biSIZE','','biWIDTH','','biHEIGHT','','biPLANES','','biBITCOUNT','','biCOMPRESSION','','biSIZEIMAGE','','biXPELSPERMETER','','biYPELSPERMETER','','biCLRUSED','','biCLRIMPORTANT','tmp');
 IH.biSIZE = fread(FID, 1, 'ulong');
 IH.biWIDTH = fread(FID, 1, 'ulong');
@@ -35,13 +37,12 @@ for i = 1 : 3 : length(PIXELS)
     r = r + 1;
 end
 
-Y = R; %BW pic, R=G=B
+Y = R; % BW pic, R=G=B
 %Y = 0.299 * R + 0.587 * G + 0.114 * B;
 
 figure, histogram(Y);
 title('Luma component histogram');
 grid on;
-
 
 figure();
 v = mean(Y);
@@ -52,7 +53,6 @@ end
 YR = xcorr(YR(end/2:end));
 plot (YR(end/2:end));
 title('Graph of the autocorrelation test func');
-
 
 sctr1 = Y(1:end-2);
 sctr2 = Y(2:end-1);
