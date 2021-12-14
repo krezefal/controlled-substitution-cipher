@@ -1,8 +1,8 @@
-# Controller substitution cipher
+# Controlled substitution cipher
 
 ## Description
 
-One of the options for constructing controller substitution cipher is to use a set of 
+One of the options for constructing controlled substitution cipher is to use a set of 
 N lookup tables, half of which are forward lookup tables and the other are backward lookup
 tables (each forward lookup table has a corresponding backward lookup table).
 
