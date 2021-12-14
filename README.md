@@ -25,7 +25,7 @@ Or just run it w/o building the binary:
 
 `go run main.go utils.go`
 
-The program also has a set of standard tests written on matlab: 
+This repo also has a set of standard tests written on matlab: 
 - Histogram test
 - Autocorrelation test
 - Lattice test (scatter plot)
