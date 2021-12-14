@@ -11,7 +11,7 @@ considered a forward substitution table, and which is a reverse substitution).
 It is only important that each forward lookup table has a (single) table that is 
 mutually opposite to it. 
 
-## Realisation
+## Implementation
 
 This program is a Go module that provides message encryption and decryption procedure.
 For better visualization, image is taken as a message, but any other sequence of bytes
