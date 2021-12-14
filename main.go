@@ -14,19 +14,19 @@ const rounds = 8
 const subblocksNum = 32
 const keysCapacity = rounds * subblocksNum
 
-	func encrypt(rounds int, byteRow []byte, keys [keysCapacity]uint8, subsTables [32][256]uint8) []byte {
+func encrypt(rounds int, byteRow []byte, keys [keysCapacity]uint8, subsTables [32][256]uint8) []byte {
 
 	result := make([]byte, len(byteRow))
 	copy(result, byteRow)
 
 	for r := 0; r < rounds; r++ {
 		for i := 0; i < len(result); i += subblocksNum {
-			result[i] = result[i] ^ keys[r * 32]
+			result[i] = result[i] ^ keys[r*32]
 			tableNum := result[i] % 32
 			for j := 1; j < subblocksNum; j++ {
-				result[i + j] = result[i + j] ^ keys[j + r * 32]
-				result[i + j] = subsTables[tableNum][result[i + j]]
-				tableNum = (result[i + j] % 32) ^ tableNum
+				result[i+j] = result[i+j] ^ keys[j+r*32]
+				result[i+j] = subsTables[tableNum][result[i+j]]
+				tableNum = (result[i+j] % 32) ^ tableNum
 			}
 		}
 	}
@@ -42,12 +42,12 @@ func decrypt(rounds int, byteRow []byte, keys [keysCapacity]uint8, subsTables [3
 	for r := rounds - 1; r >= 0; r-- {
 		for i := 0; i < len(result); i += subblocksNum {
 			tableNum := result[i] % 32
-			result[i] = result[i] ^ keys[r * 32]
+			result[i] = result[i] ^ keys[r*32]
 			for j := 1; j < subblocksNum; j++ {
 				tmp := tableNum
-				tableNum = (result[i + j] % 32) ^ tableNum
-				result[i + j] = subsTables[(tmp + 16) % 32][result[i + j]]
-				result[i + j] = result[i + j] ^ keys[j + r * 32]
+				tableNum = (result[i+j] % 32) ^ tableNum
+				result[i+j] = subsTables[(tmp+16)%32][result[i+j]]
+				result[i+j] = result[i+j] ^ keys[j+r*32]
 			}
 		}
 	}
@@ -64,8 +64,8 @@ func main() {
 	r := rand.New(seed)
 
 	for i := range keys {
-        keys[i] = uint8(r.Intn(256))
-    }
+		keys[i] = uint8(r.Intn(256))
+	}
 
 	fmt.Println("ROUND KEYS:", keys)
 
@@ -85,7 +85,7 @@ func main() {
 	}
 	for i := 16; i < 32; i++ {
 		for j := 1; j < 256; j++ {
-			subsTables[i][subsTables[i - 16][j]] = uint8(j)
+			subsTables[i][subsTables[i-16][j]] = uint8(j)
 		}
 	}
 

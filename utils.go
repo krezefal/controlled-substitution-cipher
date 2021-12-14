@@ -64,9 +64,9 @@ func writeImage(width, height int, byteRow []byte) *image.RGBA {
 	var kk int
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			cyan := color.RGBA{R: byteRow[kk], G: byteRow[kk+1], B: byteRow[kk+2], A: byteRow[kk+3]}
-			newImg.Set(x, y, cyan)
-			kk+=4
+			pix := color.RGBA{R: byteRow[kk], G: byteRow[kk+1], B: byteRow[kk+2], A: byteRow[kk+3]}
+			newImg.Set(x, y, pix)
+			kk += 4
 		}
 	}
 
