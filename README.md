@@ -21,6 +21,10 @@ To build the source, execute
 
 `go build -o bin/controlled-substitution-cipher main.go utils.go`
 
+Or just run it w/o building the binary:
+
+`go run main.go utils.go`
+
 The program also has a set of standard tests written on matlab: 
 - Histogram test
 - Autocorrelation test
